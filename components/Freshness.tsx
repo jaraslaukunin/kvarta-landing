@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { asset } from "@/lib/asset";
 import styles from "./Freshness.module.css";
 
 const timeline = [
@@ -54,7 +55,7 @@ export function Freshness() {
 
           <figure className={`${styles.band} rise`}>
             <Image
-              src="/images/freshness-beans.jpg"
+              src={asset("/images/freshness-beans.jpg")}
               alt="Обжаренные зёрна кофе крупным планом через час после обжарки"
               width={1600}
               height={1067}

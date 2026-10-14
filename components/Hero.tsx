@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { asset } from "@/lib/asset";
 import { site } from "@/lib/site";
 import { RoastClock } from "./RoastClock";
 import styles from "./Hero.module.css";
@@ -51,7 +52,7 @@ export function Hero() {
           <div className={styles.visual}>
             <figure className={styles.photo}>
               <Image
-                src="/images/hero-barista.jpg"
+                src={asset("/images/hero-barista.jpg")}
                 alt="Бариста снимает рожок с эспрессо-машины в мастерской на Короля, 9"
                 width={1400}
                 height={2100}

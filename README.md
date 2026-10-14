@@ -3,7 +3,10 @@
 Тестовое задание: лендинг небольшой обжарки кофе в Минске и приём заявок
 на своём эндпоинте. Клиент вымышленный, все факты взяты из брифа.
 
-**Живой сайт:** добавляется после деплоя (см. «Деплой»).
+**Живой сайт (GitHub Pages):** https://jaraslaukunin.github.io/kvarta-landing/
+**Репозиторий:** https://github.com/jaraslaukunin/kvarta-landing
+**Вариант с работающей формой:** тот же репозиторий деплоится на Vercel/Node без правок кода —
+там форма пишет заявки в SQLite или Redis (см. «Деплой»).
 **Стек:** Next.js 16 (App Router, Turbopack) + TypeScript, свой CSS без UI-библиотек.
 Страница статическая, API — два route handler'а. Зависимостей, кроме React и Next, нет.
 
@@ -81,6 +84,7 @@
 npm install
 npm run dev            # http://localhost:3000
 npm run build && npm start
+npm run build:static   # статическая копия для GitHub Pages → ./out
 npm test               # 24 юнит-теста
 npm run typecheck
 npm run lint
@@ -102,16 +106,42 @@ curl -X POST http://localhost:3000/api/lead \
 
 ## Деплой
 
-Приложение рассчитано на Vercel или любой Node-хостинг. Обязательна одна переменная —
-`NEXT_PUBLIC_SITE_URL`: чтобы OG-картинка, canonical и sitemap были абсолютными.
+Проект собирается в двух режимах — от этого зависит только транспорт формы,
+код лендинга один и тот же.
+
+### 1. GitHub Pages (статическая копия, сделано)
+
+Живая ссылка: **https://jaraslaukunin.github.io/kvarta-landing/**
+
+Сборка и публикация — в [`.github/workflows/pages.yml`](./.github/workflows/pages.yml).
+Локально то же самое:
+
+```bash
+NEXT_PUBLIC_BASE_PATH=/kvarta-landing npm run build:static   # результат в ./out
+```
+
+Скрипт `scripts/build-static.mjs` на время экспорта убирает `app/api` (Next не умеет
+экспортировать проект с API-роутами) и возвращает её обратно, даже если сборка упала.
+
+> **Важно про форму на Pages.** GitHub Pages раздаёт только статические файлы,
+> поэтому там нет ни `/api/lead`, ни базы: требования «дедупликация 10 минут,
+> хранение заявок, метки рекламы» физически не выполняются на статическом хостинге.
+> В этой копии форма полностью проверяет данные, а при отправке честно предлагает
+> телефон и Telegram. Чтобы форма работала и на Pages, достаточно [переменных репозитория](https://github.com/jaraslaukunin/kvarta-landing/settings/variables/actions):
+> `LEAD_ENDPOINT` (адрес своего API) или `FORM_RELAY_EMAIL` (приём писем через FormSubmit) —
+> воркфлоу подставит их в сборку, пересобирать код не нужно.
+
+### 2. Vercel или любой Node-хостинг (полноценная форма)
 
 ```bash
 npx vercel deploy --prod        # либо подключить репозиторий в панели Vercel
 ```
 
-На Vercel форма работает сразу, заявки пишутся в `/tmp` инстанса. Чтобы они не терялись,
-добавьте `UPSTASH_REDIS_REST_URL` и `UPSTASH_REDIS_REST_TOKEN` — приложение само
-переключится на Redis. Для дубля в мессенджер — `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID`.
+Обязательна одна переменная — `NEXT_PUBLIC_SITE_URL`, чтобы OG-картинка, canonical
+и sitemap были абсолютными. На Vercel форма работает сразу, заявки пишутся в `/tmp`
+инстанса; чтобы они не терялись, добавьте `UPSTASH_REDIS_REST_URL` и
+`UPSTASH_REDIS_REST_TOKEN` — приложение само переключится на Redis.
+Для дубля в мессенджер — `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID`.
 
 ## Замеры
 
@@ -149,10 +179,13 @@ LCP — самое слабое место: это фото в первом эк
 ```
 app/            страница, layout, метаданные, icon, robots, sitemap, api/lead, api/health
 components/     секции лендинга и форма (CSS Modules рядом с компонентами)
-lib/            site.ts (контент), phone.ts, lead-validation.ts, attribution.ts,
-                rate-limit.ts, telegram.ts, roast-schedule.ts, leads/* (хранилища)
+lib/            site.ts (контент), phone.ts, lead-validation.ts, attribution.ts, asset.ts,
+                lead-transport.ts (куда отправлять заявку), rate-limit.ts, telegram.ts,
+                roast-schedule.ts, leads/* (хранилища)
+scripts/        сборка статической копии
 test/           юнит-тесты
 docs/           лог работы с ИИ, отчёты Lighthouse
+.github/        воркфлоу публикации на GitHub Pages
 ```
 
 ## Что можно сделать дальше

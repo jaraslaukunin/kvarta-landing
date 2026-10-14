@@ -12,6 +12,7 @@ import {
   type Interest,
 } from "@/lib/lead-validation";
 import { formatByPhoneInput } from "@/lib/phone";
+import { sendLead, transportKind } from "@/lib/lead-transport";
 import { formatMinskDate, formatMinskWeekday, nextOrderRoast } from "@/lib/roast-schedule";
 import { site } from "@/lib/site";
 import styles from "./LeadForm.module.css";
@@ -113,22 +114,14 @@ export function LeadForm() {
     setFailure(null);
 
     try {
-      const response = await fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...draft,
-          attribution: attribution.current,
-          page: window.location.pathname + window.location.search,
-        }),
+      const result = await sendLead({
+        ...draft,
+        attribution: attribution.current,
+        page: window.location.pathname + window.location.search,
       });
 
-      const payload = (await response.json().catch(() => null)) as
-        | { ok?: boolean; status?: string; message?: string; errors?: LeadErrors }
-        | null;
-
-      if (response.ok && payload?.ok) {
-        if (payload.status === "duplicate") {
+      if (result.status === "created" || result.status === "duplicate") {
+        if (result.status === "duplicate") {
           setStatus("duplicate");
         } else {
           const nextDate = nextOrderRoast(new Date());
@@ -139,23 +132,18 @@ export function LeadForm() {
         return;
       }
 
-      if (response.status === 422 && payload?.errors) {
-        setErrors(payload.errors);
+      if (result.status === "invalid") {
+        setErrors(result.errors);
         setStatus("idle");
         setFailure({
           title: "Проверьте поля",
-          text: payload.message ?? "Что-то в данных не сходится.",
+          text: result.message ?? "Что-то в данных не сходится.",
         });
         return;
       }
 
       setStatus("failed");
-      setFailure({
-        title: response.status === 429 ? "Слишком часто" : "Заявка не ушла",
-        text:
-          payload?.message ??
-          "Сервер не ответил. Позвоните нам — примем заявку по телефону.",
-      });
+      setFailure({ title: result.title, text: result.text });
     } catch {
       setStatus("failed");
       setFailure({
@@ -351,6 +339,13 @@ export function LeadForm() {
                     onChange={(event) => update("website", event.target.value)}
                   />
                 </div>
+
+                {transportKind === "none" ? (
+                  <p className={styles.notice}>
+                    Это статическая копия сайта на GitHub Pages: сервера здесь нет, поэтому
+                    кнопка подскажет, как передать заявку — телефон и Telegram работают.
+                  </p>
+                ) : null}
 
                 {failure ? (
                   <div className={styles.failure} role="alert">

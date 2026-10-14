@@ -195,6 +195,17 @@
   overflow: hidden;
 }
 
+.notice {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 10px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--ink-70);
+  background: color-mix(in srgb, var(--cream) 70%, transparent);
+}
+
 .failure {
   padding: 14px 16px;
   border: 1px solid #d8a396;

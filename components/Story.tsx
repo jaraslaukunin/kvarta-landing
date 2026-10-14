@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { asset } from "@/lib/asset";
 import styles from "./Story.module.css";
 
 const details = [
@@ -54,7 +55,7 @@ export function Story() {
             <div className={`${styles.shots} rise`}>
               <figure className={styles.shotSmall}>
                 <Image
-                  src="/images/workshop.jpg"
+                  src={asset("/images/workshop.jpg")}
                   alt="Барабанная печь для обжарки на 5 кг в мастерской на Короля, 9"
                   width={1080}
                   height={984}
@@ -67,7 +68,7 @@ export function Story() {
 
               <figure className={styles.shotWide}>
                 <Image
-                  src="/images/founders.jpg"
+                  src={asset("/images/founders.jpg")}
                   alt="Аня и Дмитрий заваривают кофе перед развозом"
                   width={1600}
                   height={1066}

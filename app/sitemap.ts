@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 
+export const dynamic = "force-static";
+
 import { siteUpdated } from "@/lib/site";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kvarta-minsk.vercel.app";

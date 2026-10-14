@@ -2,6 +2,9 @@
   "name": "kvarta-landing",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=20.9"
+  },
   "description": "Лендинг обжарки кофе «Кварта» (Минск): Next.js 16, форма заявки с дедупликацией по номеру",
   "scripts": {
     "dev": "next dev",
@@ -10,6 +13,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test test/*.test.ts",
+    "build:static": "node scripts/build-static.mjs",
     "lighthouse": "lighthouse http://localhost:3000 --preset=desktop --output=json --output=html --output-path=./docs/lighthouse/report --chrome-flags=\"--headless=new\""
   },
   "dependencies": {
