@@ -2,8 +2,8 @@
   position: sticky;
   top: 0;
   z-index: 40;
-  background: color-mix(in srgb, var(--paper) 88%, transparent);
-  backdrop-filter: blur(10px);
+  /* без backdrop-filter: размытие под шапкой заметно тормозит отрисовку на телефонах */
+  background: var(--paper);
   border-bottom: 1px solid var(--line);
 }
 

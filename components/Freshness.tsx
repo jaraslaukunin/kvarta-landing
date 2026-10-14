@@ -52,13 +52,14 @@ export function Freshness() {
             ))}
           </ol>
 
-          <figure className={styles.band}>
+          <figure className={`${styles.band} rise`}>
             <Image
               src="/images/freshness-beans.jpg"
               alt="Обжаренные зёрна кофе крупным планом через час после обжарки"
               width={1600}
               height={1067}
-              sizes="(max-width: 900px) 92vw, 100vw"
+              quality={60}
+              sizes="(max-width: 900px) 92vw, 66vw"
               className={styles.bandImg}
             />
             <figcaption>

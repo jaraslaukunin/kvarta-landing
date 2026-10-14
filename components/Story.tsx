@@ -51,14 +51,15 @@ export function Story() {
               </dl>
             </div>
 
-            <div className={styles.shots}>
+            <div className={`${styles.shots} rise`}>
               <figure className={styles.shotSmall}>
                 <Image
                   src="/images/workshop.jpg"
                   alt="Барабанная печь для обжарки на 5 кг в мастерской на Короля, 9"
                   width={1080}
                   height={984}
-                  sizes="(max-width: 900px) 92vw, 34vw"
+                  quality={60}
+                  sizes="(max-width: 900px) 60vw, 20vw"
                   className={styles.img}
                 />
                 <figcaption>Печь на 5 кг. Четверг — её день</figcaption>
@@ -70,7 +71,8 @@ export function Story() {
                   alt="Аня и Дмитрий заваривают кофе перед развозом"
                   width={1600}
                   height={1066}
-                  sizes="(max-width: 900px) 92vw, 40vw"
+                  quality={60}
+                  sizes="(max-width: 900px) 92vw, 32vw"
                   className={styles.img}
                 />
                 <figcaption>Утро перед развозом: проверяем партию на вкус</figcaption>

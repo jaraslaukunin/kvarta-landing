@@ -56,6 +56,8 @@ export function Hero() {
                 width={1400}
                 height={2100}
                 priority
+                fetchPriority="high"
+                quality={60}
                 sizes="(max-width: 900px) 92vw, 44vw"
                 className={styles.photoImg}
               />
