@@ -1,0 +1,279 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 460px);
+  gap: clamp(28px, 4vw, 56px);
+  align-items: start;
+}
+
+.intro {
+  max-width: 52ch;
+}
+
+.promises {
+  list-style: none;
+  margin: 26px 0 0;
+  padding: 0;
+  font-size: 0.93rem;
+  color: var(--ink-70);
+}
+
+.promises li {
+  position: relative;
+  padding: 9px 0 9px 22px;
+  border-top: 1px solid var(--line);
+}
+
+.promises li::before {
+  content: "●";
+  position: absolute;
+  left: 2px;
+  top: 9px;
+  font-size: 0.5rem;
+  color: var(--ember);
+}
+
+.contacts {
+  margin-top: 26px;
+  padding: 16px 18px;
+  background: color-mix(in srgb, var(--cream) 65%, transparent);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  font-size: 0.92rem;
+}
+
+.contactsTitle {
+  margin: 0 0 6px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-50);
+}
+
+.contacts p {
+  margin: 0 0 4px;
+}
+
+.hours {
+  font-size: 0.8rem;
+  color: var(--ink-50);
+}
+
+.card {
+  padding: clamp(20px, 3vw, 28px);
+  background: var(--cream);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.form {
+  display: grid;
+  gap: 18px;
+}
+
+.field,
+.fieldset {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.label {
+  font-size: 0.86rem;
+  font-weight: 600;
+  padding: 0;
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--ink-50);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 0.78rem 0.9rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: #fffdf9;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.4;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 92px;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: #a89c90;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--ember);
+  box-shadow: 0 0 0 3px rgba(184, 83, 31, 0.16);
+}
+
+.input[aria-invalid="true"],
+.textarea[aria-invalid="true"] {
+  border-color: #a5301f;
+  box-shadow: 0 0 0 3px rgba(165, 48, 31, 0.12);
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.76rem;
+  color: var(--ink-50);
+}
+
+.error {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: #8f2413;
+}
+
+.options {
+  display: grid;
+  gap: 8px;
+}
+
+.option {
+  display: grid;
+  grid-template-columns: 18px minmax(0, auto);
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  align-items: center;
+  padding: 11px 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.16s ease, background-color 0.16s ease;
+}
+
+.option:hover {
+  border-color: var(--ember);
+}
+
+.optionOn {
+  border-color: var(--ember);
+  background: var(--ember-soft);
+}
+
+.radio {
+  grid-row: 1 / 3;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--ember);
+  margin: 0;
+}
+
+.optionLabel {
+  font-weight: 600;
+  font-size: 0.94rem;
+}
+
+.optionHint {
+  font-size: 0.76rem;
+  color: var(--ink-50);
+}
+
+.trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.failure {
+  padding: 14px 16px;
+  border: 1px solid #d8a396;
+  background: #fbeee9;
+  border-radius: 10px;
+}
+
+.failureTitle {
+  margin: 0 0 4px;
+  font-weight: 600;
+  color: #8f2413;
+}
+
+.failureText {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: #6b3325;
+}
+
+.consent {
+  margin: 0;
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: var(--ink-50);
+}
+
+.status {
+  margin: 0;
+  min-height: 1.2em;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-50);
+}
+
+.result {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  padding-block: 6px;
+}
+
+.resultMark {
+  margin: 0;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-content: center;
+  border-radius: 50%;
+  background: var(--ember-soft);
+  color: var(--ember-ink);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.resultTitle {
+  font-size: 1.3rem;
+}
+
+.resultText {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--ink-70);
+}
+
+.next {
+  margin: 4px 0 6px;
+  padding-left: 18px;
+  font-size: 0.87rem;
+  color: var(--ink-70);
+}
+
+.next li {
+  margin-bottom: 5px;
+}
+
+@media (max-width: 940px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
