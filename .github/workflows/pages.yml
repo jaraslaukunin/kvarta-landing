@@ -39,7 +39,7 @@ jobs:
           # Либо приёмник писем без своего сервера (FormSubmit): пришлите адрес в переменную
           # репозитория FORM_RELAY_EMAIL — и заявки будут падать на почту.
           NEXT_PUBLIC_FORM_RELAY_EMAIL: ${{ vars.FORM_RELAY_EMAIL }}
-          NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL || 'https://jaraslaukunin.github.io' }}
         run: npm run build:static
 
       - uses: actions/configure-pages@v5

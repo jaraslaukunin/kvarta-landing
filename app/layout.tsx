@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Bitter, Golos_Text, JetBrains_Mono } from "next/font/google";
+import { asset, BASE_PATH } from "@/lib/asset";
 import "./globals.css";
 
 const display = Bitter({
@@ -20,7 +21,8 @@ const mono = JetBrains_Mono({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kvarta-minsk.vercel.app";
+// пустая переменная окружения не должна ломать сборку: `??` тут не спасает
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kvarta-minsk.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -37,18 +39,18 @@ export const metadata: Metadata = {
     "подписка на кофе",
     "кофе в зерне Минск",
   ],
-  alternates: { canonical: "/" },
+  alternates: { canonical: BASE_PATH || "/" },
   openGraph: {
     type: "website",
     locale: "ru_RU",
-    url: "/",
+    url: BASE_PATH || "/",
     siteName: "Обжарка «Кварта»",
     title: "Кварта — обжарка кофе в Минске",
     description:
       "Обжариваем по четвергам, развозим по Минску по пятницам. Зерно у вас на 1–3 день после обжарки.",
     images: [
       {
-        url: "/og.png",
+        url: asset("/og.png"),
         width: 1200,
         height: 630,
         alt: "Обжарка «Кварта»: обжариваем по четвергам, привозим по пятницам",
@@ -59,7 +61,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Кварта — обжарка кофе в Минске",
     description: "Обжариваем по четвергам, развозим по пятницам. Свежесть видно по дате на пачке.",
-    images: ["/og.png"],
+    images: [asset("/og.png")],
   },
   robots: { index: true, follow: true },
 };
