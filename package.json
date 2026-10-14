@@ -1,12 +1,16 @@
 {
-  "name": "vitai-tz",
-  "version": "0.1.0",
+  "name": "kvarta-landing",
+  "version": "1.0.0",
   "private": true,
+  "description": "Лендинг обжарки кофе «Кварта» (Минск): Next.js 16, форма заявки с дедупликацией по номеру",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test test/*.test.ts",
+    "lighthouse": "lighthouse http://localhost:3000 --preset=desktop --output=json --output=html --output-path=./docs/lighthouse/report --chrome-flags=\"--headless=new\""
   },
   "dependencies": {
     "next": "16.4.0",
@@ -14,11 +18,12 @@
     "react-dom": "19.3.0"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }
