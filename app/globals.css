@@ -128,6 +128,13 @@ button {
   border-top: 1px solid var(--line);
 }
 
+/* липкая шапка не должна накрывать заголовок раздела при переходе по #ссылке */
+:target,
+section[id],
+[id="top"] {
+  scroll-margin-top: 96px;
+}
+
 .section--tight {
   padding-block: clamp(40px, 6vw, 68px);
 }
@@ -301,6 +308,8 @@ button:hover .arrow {
 
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
+    /* навешиваем только на блоки ниже первого экрана: если браузер не умеет
+       scroll-driven анимации, они просто показываются как обычно */
     .rise {
       animation: rise linear both;
       animation-timeline: view();

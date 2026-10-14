@@ -39,7 +39,7 @@ export function Assortment() {
                   <p className={styles.meta}>
                     {coffee.origin} · <RoastScale level={coffee.roast} /> {coffee.roastLabel} обжарка
                   </p>
-                  <p className={styles.best}>Хорошо в: {coffee.best}</p>
+                  <p className={styles.best}>Заваривать: {coffee.best.join(", ")}</p>
                 </div>
                 <div className={styles.price}>
                   <b>{coffee.price}</b>

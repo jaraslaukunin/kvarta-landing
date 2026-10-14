@@ -54,6 +54,14 @@
   color: var(--line-strong);
 }
 
+.hours {
+  padding-left: 0;
+}
+
+.hours::before {
+  content: none;
+}
+
 .hint {
   margin: 14px 0 0;
   font-size: 0.8rem;

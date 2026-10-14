@@ -38,7 +38,7 @@ export function Delivery() {
               <p className={styles.big}>{site.address}</p>
               <ul className={styles.list}>
                 {site.hours.map((row) => (
-                  <li key={row.days}>
+                  <li key={row.days} className={styles.hours}>
                     {row.days} — {row.time}
                   </li>
                 ))}

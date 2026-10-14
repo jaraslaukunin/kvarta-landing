@@ -44,7 +44,8 @@ export type Coffee = {
   unit: string;
   roast: RoastLevel;
   roastLabel: string;
-  best: string;
+  /** чем заваривать: воронка, гейзер, эспрессо… */
+  best: string[];
   accent: string;
   featured?: boolean;
 };
@@ -59,7 +60,7 @@ export const coffees: Coffee[] = [
     unit: "250 г",
     roast: 1,
     roastLabel: "светлая",
-    best: "воронка, аэропресс",
+    best: ["воронка", "аэропресс"],
     accent: "var(--plum)",
     featured: true,
   },
@@ -72,7 +73,7 @@ export const coffees: Coffee[] = [
     unit: "250 г",
     roast: 2,
     roastLabel: "средняя",
-    best: "воронка, гейзер, френч-пресс",
+    best: ["воронка", "гейзер", "френч-пресс"],
     accent: "var(--brick)",
   },
   {
@@ -84,7 +85,7 @@ export const coffees: Coffee[] = [
     unit: "250 г",
     roast: 3,
     roastLabel: "средне-тёмная",
-    best: "эспрессо, гейзер, молоко",
+    best: ["эспрессо", "гейзер", "в молоке"],
     accent: "var(--cocoa)",
   },
 ];
