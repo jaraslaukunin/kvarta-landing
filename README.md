@@ -1,36 +1,163 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Обжарка «Кварта» — лендинг с рабочей формой заявки
 
-## Getting Started
+Тестовое задание: лендинг небольшой обжарки кофе в Минске и приём заявок
+на своём эндпоинте. Клиент вымышленный, все факты взяты из брифа.
 
-First, run the development server:
+**Живой сайт:** добавляется после деплоя (см. «Деплой»).
+**Стек:** Next.js 16 (App Router, Turbopack) + TypeScript, свой CSS без UI-библиотек.
+Страница статическая, API — два route handler'а. Зависимостей, кроме React и Next, нет.
+
+---
+
+## Что сделано
+
+### Лендинг
+- Тёплая «бумажная» палитра, зерно бумаги на фоне, печатная типографика:
+  Bitter (заголовки) + Golos Text (текст) + JetBrains Mono (подписи и цифры).
+  Кириллические сабсеты, шрифты раздаются с нашего домена — внешних запросов нет.
+- Блоки: герой с расписанием → мастерская → свежесть → ассортимент с ценами →
+  подписка → доставка и самовывоз → вопросы → форма → футер.
+- Расписание обжарки живое: скрипт считает по Минску, что происходит сейчас —
+  «сегодня обжариваем», «фасуем», «развозим» или «ждём четверга», — показывает
+  обратный отсчёт до ближайшей обжарки и дату партии, которая лежит в пачках.
+- Мобильный вид продуман отдельно: фото уходит наверх, факты — в две колонки,
+  кнопки на всю ширину, форма без мелкого шрифта.
+- Фото подобраны вручную (Burst by Shopify, Wikimedia CC0), лежат локально,
+  лицензии — в [CREDITS.md](./CREDITS.md).
+
+### Форма и API
+- `POST /api/lead` принимает JSON: имя, телефон, интерес (подписка / разовый заказ / вопрос),
+  комментарий плюс скрытые метки рекламы.
+- **Белорусский номер.** Разбираем `+375 29 123-45-67`, `8029…`, `029…`, `29…`;
+  проверяем не только длину, но и код: мобильные 25/29/33/44 и городские (17, 152, 162, …).
+  Чужой код не примем и объясним почему. В поле работает маска.
+- **Дубли.** Повторный номер в течение 10 минут не создаёт вторую заявку — ни при двойном
+  клике, ни при повторной отправке. Проверка и вставка идут без `await` между собой,
+  поэтому гонки внутри процесса нет; в Redis-варианте дедупликация держится на атомарном
+  `SET NX PX`. Человек видит спокойное «заявка уже есть», менеджер — счётчик попыток.
+- **Источник.** На первом заходе читаем `utm_*`, `yclid`, `gclid`, `fbclid`, `referrer`
+  и адрес входа, складываем в `sessionStorage` и отправляем вместе с заявкой; на сервере
+  всё проходит белый список и обрезку по длине. Менеджер видит строку вида
+  «Instagram · кампания: stroys · объявление: storis-efiopia · вошёл на /?utm_source=instagram».
+- **Ошибки.** 422 с текстом по каждому полю, 429 при частых отправках, 500 и сетевые сбои —
+  на экране появляется понятное объяснение и телефон с Telegram, введённые данные не теряются.
+- **Мелочи, которые обычно забывают:** ловушка для ботов (заполненное скрытое поле —
+  отвечаем как человеку, но ничего не пишем), ограничение частоты по IP, IP хранится
+  только хешем с солью, ограничение размера тела, `no-store` на ответах, `GET /api/lead` → 405.
+
+### Где хранятся заявки
+
+Выбор падает на SQLite: один файл, нет внешних сервисов, заявки переживают перезапуск,
+дедупликация — индекс `(phone, created_at)`. Использую встроенный модуль `node:sqlite`,
+нативных сборок нет. Реализация спрятана за интерфейсом `LeadStore`:
+
+| Режим | Когда включается | Комментарий |
+| --- | --- | --- |
+| `sqlite` | по умолчанию | `data/leads.sqlite`: VPS, Docker, локальный запуск |
+| `redis` | `UPSTASH_REDIS_REST_URL` + `TOKEN` | serverless: данные общие, дедупликация атомарная |
+| `file` | `LEAD_STORE=file` или SQLite не открылся | JSONL в `/tmp` — запасной вариант |
+| `memory` | `LEAD_STORE=memory` | тесты |
+
+Проверка режима после деплоя: `GET /api/health` → `{"ok":true,"store":"sqlite"}`.
+
+> Честно про serverless: на Vercel файловая система только для чтения, кроме `/tmp`,
+> а инстансов может быть несколько. Приложение не падает — само уходит в файл в `/tmp`
+> и пишет об этом в лог, — но по-настоящему общим хранилищем там будет Upstash Redis
+> (бесплатный тариф) или внешняя база. Это единственный сознательный компромисс,
+> чтобы сайт разворачивался без аккаунтов и лишних сервисов.
+
+### Бонусы из брифа
+- Дублирование заявки в Telegram-бот: `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID`.
+  Ошибка Telegram не ломает приём заявки — только пишется в лог.
+- Превью ссылки: `og.png` 1200×630 (собран локально), `twitter:card`, canonical, sitemap, robots.
+- Анимации: fade-in блоков ниже первого экрана на scroll-driven CSS-анимациях (без JS)
+  плюс hover-переходы; при `prefers-reduced-motion` всё выключается.
+
+---
+
+## Локальный запуск
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev            # http://localhost:3000
+npm run build && npm start
+npm test               # 24 юнит-теста
+npm run typecheck
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Переменные окружения — в [.env.example](./.env.example). Локально заполнять ничего не нужно:
+заявки лягут в `data/leads.sqlite` (папка в `.gitignore`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Проверить API руками:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+curl -X POST http://localhost:3000/api/lead \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Аня","phone":"+375 29 123-45-67","interest":"subscription",
+       "attribution":{"utm_source":"instagram","utm_campaign":"stroys"}}'
+# → {"ok":true,"status":"created",...}
+# повторный запрос с тем же номером → {"ok":true,"status":"duplicate",...}
+```
 
-## Learn More
+## Деплой
 
-To learn more about Next.js, take a look at the following resources:
+Приложение рассчитано на Vercel или любой Node-хостинг. Обязательна одна переменная —
+`NEXT_PUBLIC_SITE_URL`: чтобы OG-картинка, canonical и sitemap были абсолютными.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npx vercel deploy --prod        # либо подключить репозиторий в панели Vercel
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+На Vercel форма работает сразу, заявки пишутся в `/tmp` инстанса. Чтобы они не терялись,
+добавьте `UPSTASH_REDIS_REST_URL` и `UPSTASH_REDIS_REST_TOKEN` — приложение само
+переключится на Redis. Для дубля в мессенджер — `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID`.
 
-## Deploy on Vercel
+## Замеры
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Lighthouse, мобильный профиль (throttling simulate, 4× CPU), отчёты в
+[`docs/lighthouse/mobile.report.html`](./docs/lighthouse/mobile.report.html):
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Категория | Оценка |
+| --- | --- |
+| Performance | 89 |
+| Accessibility | 100 |
+| Best practices | 100 |
+| SEO | 100 |
+
+FCP 1.1 с, CLS 0, TBT 20 мс, LCP 3.7 с, вес страницы 441 КиБ.
+LCP — самое слабое место: это фото в первом экране, и почти всё время уходит на
+загрузку и отрисовку под искусственным троттлингом. Что уже сделано: `priority` +
+`fetchPriority="high"`, `quality={60}` и точные `sizes` для всех фото, отсутствие
+`backdrop-filter` у липкой шапки (он стоил около секунды отрисовки), шрифты без
+внешних запросов. Что можно сделать дальше: отдавать первый экран без гидрации
+(островок формы подгружать при скролле) и сжать исходник фото ещё сильнее.
+
+## Тесты
+
+`node:test` + `tsx`, без браузера и без моков инфраструктуры:
+
+- `test/phone.test.ts` — записи номера, коды операторов и городов, маска, отказы.
+- `test/leads.test.ts` — создание заявки, дубль внутри 10 минут, истечение окна,
+  разные номера не мешают, ошибки по полям, ловушка для ботов.
+- `test/roast-schedule.test.ts` — состояния расписания по дням, дедлайн, следующая партия.
+- `test/attribution.test.ts` — белый список меток, обрезка, человеческое описание источника.
+- `test/rate-limit.test.ts` — окно ограничения по IP.
+
+## Структура
+
+```
+app/            страница, layout, метаданные, icon, robots, sitemap, api/lead, api/health
+components/     секции лендинга и форма (CSS Modules рядом с компонентами)
+lib/            site.ts (контент), phone.ts, lead-validation.ts, attribution.ts,
+                rate-limit.ts, telegram.ts, roast-schedule.ts, leads/* (хранилища)
+test/           юнит-тесты
+docs/           лог работы с ИИ, отчёты Lighthouse
+```
+
+## Что можно сделать дальше
+
+- Redis или Postgres на проде, чтобы заявки не зависели от инстанса.
+- Экран менеджера со списком заявок и выгрузкой в CSV.
+- Проверка кода оператора по актуальному справочнику — сейчас список в `lib/phone.ts`.
+- Сравнение вариантов первого экрана под рекламу: метки уже собираются.
