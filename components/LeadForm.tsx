@@ -64,11 +64,6 @@ export function LeadForm() {
     } catch {
       // приватный режим — просто не запоминаем
     }
-
-    const preset = url.searchParams.get("interest");
-    if (isInterest(preset)) {
-      setDraft((current) => ({ ...current, interest: preset }));
-    }
   }, []);
 
   // Кнопки «Оформить подписку» и «Задать вопрос» выбирают нужный пункт формы.

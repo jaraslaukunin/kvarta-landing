@@ -12,7 +12,7 @@ const ROAST_HOUR = 8;
 const ROAST_END_HOUR = 15;
 const PACK_HOUR = 16;
 const DELIVERY_WEEKDAY = 5; // пятница
-const ORDER_DEADLINE_WEEKDAY = 3; // среда
+/** крайний срок приёма заявок — среда, 20:00, то есть вечер перед обжаркой */
 const ORDER_DEADLINE_HOUR = 20;
 
 export type MinskMoment = {
