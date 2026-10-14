@@ -1,0 +1,102 @@
+.clock {
+  position: relative;
+  margin-top: -26px;
+  margin-inline-start: clamp(0px, 4vw, 42px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px 20px;
+  align-items: center;
+  padding: 18px 20px;
+  background: var(--cream);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  box-shadow: 0 20px 40px -32px rgba(27, 21, 18, 0.55);
+}
+
+.kicker {
+  margin: 0 0 2px;
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ember-ink);
+}
+
+.date {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: 1.14rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.note {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--ink-70);
+  max-width: 34ch;
+}
+
+.right {
+  text-align: right;
+}
+
+.countdown {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.cell {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 30px;
+}
+
+.cell b {
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.cell i {
+  font-style: normal;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-50);
+}
+
+.colon {
+  color: var(--line-strong);
+  transform: translateY(-6px);
+}
+
+.batch {
+  margin: 6px 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-50);
+}
+
+@media (max-width: 900px) {
+  .clock {
+    margin-top: 16px;
+    margin-inline-start: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .clock {
+    grid-template-columns: 1fr;
+  }
+
+  .right {
+    text-align: left;
+  }
+}

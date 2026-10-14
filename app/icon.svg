@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Кварта">
+  <rect width="64" height="64" rx="14" fill="#1b1512" />
+  <circle cx="32" cy="30" r="17" fill="none" stroke="#e8dfcc" stroke-width="2.5" stroke-dasharray="4 4" />
+  <text x="32" y="39" font-family="Georgia, serif" font-size="24" font-weight="700" fill="#f2ebdd" text-anchor="middle">¼</text>
+  <rect x="20" y="50" width="24" height="3" rx="1.5" fill="#b8531f" />
+</svg>

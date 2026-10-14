@@ -1,0 +1,156 @@
+.cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: clamp(28px, 4vw, 52px);
+  margin-top: 30px;
+  align-items: start;
+}
+
+.included {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 26px;
+}
+
+.include {
+  padding-top: 14px;
+  border-top: 2px solid var(--ink);
+}
+
+.includeTitle {
+  font-size: 0.98rem;
+  margin-bottom: 5px;
+}
+
+.includeText {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--ink-70);
+  line-height: 1.5;
+}
+
+.steps {
+  list-style: none;
+  margin: 34px 0 0;
+  padding: 0;
+  counter-reset: none;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 14px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+
+.stepNum {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--ember-ink);
+  padding-top: 3px;
+}
+
+.stepTitle {
+  font-size: 1rem;
+  margin-bottom: 3px;
+}
+
+.stepText {
+  margin: 0;
+  font-size: 0.89rem;
+  color: var(--ink-70);
+}
+
+.card {
+  position: sticky;
+  top: 96px;
+  padding: 24px 22px 22px;
+  background: var(--cream);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.cardLabel {
+  margin: 0 0 12px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-50);
+}
+
+.cardPrice {
+  margin: 0 0 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.cardPrice b {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.cardPrice span {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-50);
+}
+
+.cardList {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  font-size: 0.9rem;
+  color: var(--ink-70);
+}
+
+.cardList li {
+  padding: 7px 0 7px 16px;
+  border-top: 1px dashed var(--line);
+  position: relative;
+}
+
+.cardList li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 15px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ember);
+}
+
+.cardNote {
+  margin: 12px 0 0;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--ink-50);
+}
+
+@media (max-width: 940px) {
+  .cols {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    position: static;
+  }
+}
+
+@media (max-width: 560px) {
+  .included {
+    grid-template-columns: 1fr;
+  }
+}
