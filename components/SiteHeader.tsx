@@ -9,7 +9,7 @@ export function SiteHeader() {
         Перейти к форме заявки
       </a>
       <div className={`wrap ${styles.inner}`}>
-        <Link className={styles.brand} href="#top" aria-label="Кварта — на главную">
+        <Link className={styles.brand} href="#top">
           <span className={styles.mark} aria-hidden="true">
             ¼
           </span>
